@@ -12,21 +12,19 @@
                         <el-badge :value="dateFormate(details.date)" type="primary">
                         </el-badge>
                     </div>
-                    <div class="flex flex-col space-y-1">
+                    <div class="flex flex-col space-y-1 max-h-64 overflow-x-hidden overflow-y-auto">
                         <!-- :class="[{ 'bg-amber-200': index == 0 }, { 'bg-zinc-200': index == 1 }, { 'bg-red-200': index == 2 }]" -->
-                        <div class="flex w-full border  rounded-md justify-between"
+                        <div class="flex w-full border  rounded-md justify-between items-center p-1"
                             :class="[{ 'bg-amber-50': index % 2 == 0 }, { 'bg-zinc-50': index % 2 }]"
                             v-for="( eachPlayer, index ) in  sortRankings(details.participants)" :key="eachPlayer.id">
-                            <span class="pl-2">{{ eachPlayer.name }}</span>
-                            <div>
-
-                                <!-- <el-icon v-if="index == 0" size="20px">
-                                    <Trophy />
-                                </el-icon>
-                                <el-icon v-if="index == 1 || index == 2" size="20px">
-                                    <Medal />
-                                </el-icon> -->
-                                <span class="text-lg font-medium px-2">{{ eachPlayer.score }}</span>
+                            <span class="">{{ eachPlayer.name }}</span>
+                            <div class="flex">
+                                <el-image v-if="eachPlayer.isWinner" style="width: 28px; height: 28px"
+                                    src="./img/success.png" fit="cover" />
+                                <div v-if="eachPlayer.score > 0" class="flex ml-3">
+                                    <span class="font-bold text-lg">{{ eachPlayer.score }}</span>
+                                    <el-image style="width: 24px; height: 24px" src="./img/coin-24.png" fit="cover" />
+                                </div>
                             </div>
 
                         </div>

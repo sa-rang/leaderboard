@@ -5,44 +5,31 @@
         <div class="flex flex-col border-gray-300 border bg-teal-900 text-white divide-y rounded-lg flex-none w-full ">
             <div class="flex flex-col space-y-2 divide-y">
                 <div class="flex flex-col p-3 ">
-                    <div class="flex flex-col py-3">
-                        <span class="font-bold text-lg">League Rankings</span>
+                    <div class="flex items-center py-3">
+                        <el-image style="width: 64px; height: 64px" src="./img/podium.png" fit="cover" />
+                        <span class=" text-xl  ml-4">Overall Ranks</span>
                     </div>
                     <div class="flex flex-col space-y-1">
-                        <div class="flex w-full border p-1 rounded-md justify-between"
-                            :class="[{ 'bg-amber-700': index == 0 }, { 'bg-zinc-700': index == 1 }, { 'bg-red-400': index == 2 }]"
-                            v-for="(eachPlayer, index) in leagueRankings" :key="eachPlayer[0]">
+                        <div class="flex w-full border p-1 rounded-md justify-between items-center"
+                            :class="[{ 'bg-amber-700': index == 0 }]" v-for="(eachPlayer, index) in leagueRankings"
+                            :key="eachPlayer[0]">
                             <span class="pl-2">{{ eachPlayer[1].name }}</span>
-                            <div>
-                                <el-icon v-if="index == 0" size="20px">
-                                    <Trophy />
-                                </el-icon>
-                                <el-icon v-if="index == 1 || index == 2" size="20px">
-                                    <Medal />
-                                </el-icon>
-                                <span class="text-lg font-medium px-2">{{ eachPlayer[1].score }}</span>
+
+                            <div class="flex items-center">
+                                <span class="text-lg font-medium mr-1">{{ eachPlayer[1].score }}</span>
+                                <el-image style="width: 24px; height: 24px" src="./img/coin-24.png" fit="cover" />
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>
-
         </div>
-
     </div>
 </template>
   
 <script setup>
-import { ref, onMounted, computed, watch } from "vue"
+import { ref, onMounted, computed, watch } from "vue";
 import { useGlobalStore } from '@/stores/global';
-import {
-    Medal,
-    Trophy
-} from '@element-plus/icons-vue'
-
-
 
 const props = defineProps({
     leagueid: {

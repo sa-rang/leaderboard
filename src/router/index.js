@@ -12,7 +12,25 @@ const routes = [
   {
     path: '/admin',
     name: 'Admin',
+    redirect: { path: "/admin/manage-player" },
     component: async () => await import('../views/AdminView.vue'),
+    children: [
+      {
+        path: "manage-player",
+        name: "Manage-Player",
+        component: async () => await import('../components/admin/PlayersForm.vue'),
+      },
+      {
+        path: "manage-score",
+        name: "Manage-Score",
+        component: async () => await import('../components/admin/ScoreForm.vue'),
+      },
+      {
+        path: "manage-shoutout",
+        name: "Manage-Shoutout",
+        component: async () => await import('../components/admin/ShoutoutForm.vue'),
+      }
+    ],
     meta: {
       requiresAuth: true
     }
@@ -21,6 +39,16 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: async () => await import('../views/Login.vue'),
+  },
+  {
+    path: '/player',
+    name: 'player',
+    component: async () => await import('../views/PlayerView.vue'),
+  },
+  {
+    path: '/user-guide',
+    name: 'user-guide',
+    component: async () => await import('../views/UserGuide.vue'),
   }
 ]
 
@@ -32,7 +60,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.path === '/login' && auth.currentUser) {
-    next('/')
+    next('/admin')
     return;
   }
 

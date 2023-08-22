@@ -12,11 +12,13 @@ export const useGlobalStore = defineStore('global', {
   state: () => ({
     user: null,
     leagueData: null,
-    gamesData: null
+    gamesData: null,
+    shoutOutData: null
   }),
   getters: {
     getLeagueData: (state) => state.leagueData,
     getGamesData: (state) => state.gamesData,
+    getUser: (state) => state.user,
 
   },
   actions: {
@@ -97,7 +99,11 @@ export const useGlobalStore = defineStore('global', {
       this.leagueData = payload;
     },
     setGamesData(payload) {
+      payload = payload.sort((a, b) => new Date(b.date) - new Date(a.date));
       this.gamesData = payload;
+    },
+    setShoutOutData(payload) {
+      this.shoutOutData = payload;
     },
     getGamesByLeagueId(id) {
       let holder = []
@@ -108,17 +114,30 @@ export const useGlobalStore = defineStore('global', {
       });
       return holder.sort((a, b) => new Date(b.date) - new Date(a.date));
     },
-    getRanksByLeagueId(id) {
+    getShoutOutsByLeagueId(id) {
       let holder = []
-      //getall games by League ID
-      this.gamesData.map((each) => {
+      this.shoutOutData.map((each) => {
         if (each.leagueid == id) {
           holder.push(each);
         }
       });
+      return holder.sort((a, b) => new Date(b.date) - new Date(a.date));
+    },
+    getRanksByLeagueId(id) {
       let playersSumScore = {}
+
+      //---------Get All Game data of League and sum-up points by player id--------
+
+      let gameDataholder = []
+      //get all games by League ID
+      this.gamesData.map((each) => {
+        if (each.leagueid == id) {
+          gameDataholder.push(each);
+        }
+      });
+
       //loop in each game
-      holder.map((each) => {
+      gameDataholder.map((each) => {
         //loop in each player
         each.participants.map((eachPlayer) => {
           if (playersSumScore[eachPlayer.id]) {
@@ -129,9 +148,27 @@ export const useGlobalStore = defineStore('global', {
         });
       });
 
-      // sort by score and return
-      return Object.entries(playersSumScore).sort((a, b) => b[1].score - a[1].score)
+      //----------Get all Shout out data of League and sum-up by player id
 
+      let shoutsDataholder = []
+      //get all shoutout by League ID
+      this.shoutOutData.map((each) => {
+        if (each.leagueid == id) {
+          shoutsDataholder.push(each);
+        }
+      });
+
+      //loop in each shout out
+      shoutsDataholder.map((each) => {
+        if (playersSumScore[each.player.id]) {
+          playersSumScore[each.player.id].score = playersSumScore[each.player.id].score + each.score;
+        } else {
+          playersSumScore[each.player.id] = { name: each.player.name, score: each.score }
+        }
+      });
+
+      // ------------- sort by score and return
+      return Object.entries(playersSumScore).sort((a, b) => b[1].score - a[1].score)
     }
   },
 })
